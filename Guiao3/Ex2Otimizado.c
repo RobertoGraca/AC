@@ -3,8 +3,17 @@
 int nops=0;
 
 int getIndex(int a[],int n){
-    unsigned int i=1,j=0,max=0,cont=0,index=0;
-    for(;i<n;i++){
+    unsigned int i=n-1,j=0,max=0,cont=0,index=-1;
+    for(;i>0;i--){
+        if(max>i)break;
+        if(a[i-1]==a[i]){
+            nops++;
+            continue;
+        }
+        if(a[i]<a[i+1] && i!=n-1){
+            nops++;
+            continue;
+        }
         cont=0;
         for(j=0;j<i;j++){
             if(a[j]<a[i]){
@@ -12,17 +21,12 @@ int getIndex(int a[],int n){
             }
             nops++;
         }
-        if(cont>max){
+        if(cont>=max){
             max=cont;
             index=i;
         }
     }
-    if(index<=0){
-        return -1;
-    }
-    else{
-        return index;
-    }
+    return index;
 }
 
 int recursion(int n){
@@ -35,8 +39,8 @@ int recursion(int n){
 
 
 int main(void){
-    int seq1[11] = {1,9,2,8,3,4,5,3,7,2};
-    int seq2[15] = {1,7,4,6,5,2,3,2,1,0};
+    int seq1[10] = {1,9,2,8,3,4,5,3,7,2};
+    int seq2[10] = {1,7,4,6,5,2,3,2,1,0};
     int seq3[10] = {2,2,2,2,2,2,2,2,2,2};
 
     int res,siz;
