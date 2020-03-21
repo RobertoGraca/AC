@@ -8,6 +8,7 @@ int getIndex(int a[],int n){
         if(max>i)break;
         if(a[i-1]==a[i]){
             nops++;
+            index=i-1;
             continue;
         }
         if(a[i]<a[i+1] && i!=n-1){
@@ -26,7 +27,7 @@ int getIndex(int a[],int n){
             index=i;
         }
     }
-    return index;
+    return (index==0)? -1:index;
 }
 
 int recursion(int n){
