@@ -27,7 +27,7 @@ int main(void){
     for(i=0;i<=28;i++){
         numRec=-1;
         x = func1(i);
-        printf("i = %2d \t Func1 -> Resultado: %3d --- NumRec: %3d\t",i, x, numRec);
+        printf("i = %3d \t Func1 -> Resultado: %3d --- NumRec: %3d\t",i, x, numRec);
         numRec=-1;
         x = func2(i);
         printf("| Func2 -> Resultado: %3d --- NumRec: %3d\t", x, numRec);
