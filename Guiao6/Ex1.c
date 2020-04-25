@@ -29,15 +29,15 @@ int motzkinPD(int n){
         }
         din[i] = din[i-1] + sum;
     }
-
     return din[n];    
 }
 
 int main(void){
     int i=0;
     int resRec,resPD;
+    
     printf("\tResRec   NopsRec   ResPD    NopsPD\n");
-    for(;i<16;i++){
+    for(;i<=15;i++){
         resRec = motzkinRec(i);
         printf("%2d -> %8d %8ld",i,resRec,nops);
         nops = 0;
