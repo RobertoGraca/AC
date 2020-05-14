@@ -33,6 +33,8 @@ SchedulingSequence* SchedulingSequenceCreate(int capacity) {
 
   ss->intervals = (List*)malloc(sizeof(List*));
 
+  ss->intervals = ListCreate(cmpTI);
+
   return ss;
   
 }
@@ -60,12 +62,11 @@ int SchedulingSequenceAdd(SchedulingSequence *ss, TimeInterval *ti) {
   for(int i=0;i<ss->size;i++){
     ListMove(ss->intervals,i);
     if(TimeIntervalOverlaps((TimeInterval*)ListGetCurrentItem(ss->intervals),ti))return 0;
-    
   }
 
   int val = ListInsert(ss->intervals, ti);
   if(val == 0){
-     ss->size += 1; 
+     ss->size++; 
     return 1;
   }
   return 0;
@@ -90,6 +91,7 @@ TimeInterval *SchedulingSequencePop(SchedulingSequence *ss, int idx) {
   // This implies !SchedulingSequenceIsEmpty(ss).
   TimeInterval* ti = SchedulingSequenceGet(ss,idx);
   ListRemoveCurrent(ss->intervals);
+  ss->size--;
   return ti;
   
 }
