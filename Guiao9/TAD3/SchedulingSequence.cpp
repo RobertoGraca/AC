@@ -61,7 +61,8 @@ int SchedulingSequenceAdd(SchedulingSequence *ss, TimeInterval *ti) {
 
   for(int i=0;i<ss->size;i++){
     ListMove(ss->intervals,i);
-    if(TimeIntervalOverlaps((TimeInterval*)ListGetCurrentItem(ss->intervals),ti))return 0;
+    TimeInterval* t = (TimeInterval*)ListGetCurrentItem(ss->intervals);
+    if(TimeIntervalOverlaps(t,ti) || ti == t)return 0;
   }
 
   int val = ListInsert(ss->intervals, ti);
