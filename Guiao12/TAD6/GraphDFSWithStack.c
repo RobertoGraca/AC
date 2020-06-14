@@ -48,7 +48,24 @@ GraphDFSWithStack* GraphDFSWithStackExecute(Graph* g,
 
   // EFETUAR A TRAVESSIA
 
-  // COMPLETAR !!
+  Stack* stack = StackCreate(numVertices);
+  
+  StackPush(stack,startVertex);
+
+  traversal->marked[startVertex] = 1;
+
+  while(!QueueIsEmpty(stack)){
+    startVertex = StackPop(stack);
+    int* adj = GraphGetAdjacentsTo(g,startVertex);
+    for(int i=1;i<adj[0];i++){
+      int adjVertex = adj[i];
+      if(!traversal->marked[adjVertex]){
+        traversal->predecessor[adjVertex] = startVertex;
+        StackPush(stack,adjVertex);
+        traversal->marked[adjVertex] = 1; 
+      }
+    }
+  }
 
   return traversal;
 }
@@ -109,6 +126,7 @@ void GraphDFSWithStackShowPath(const GraphDFSWithStack* p, unsigned int v) {
 }
 
 void GraphDFSWithStackDisplay(const GraphDFSWithStack* p) {
-  // COMPLETAR !!
-  
+  for(int i=0;i<GraphGetNumVertices(p->graph);i++){
+    GraphDFSWithStackShowPath(p,i);
+  }
 }

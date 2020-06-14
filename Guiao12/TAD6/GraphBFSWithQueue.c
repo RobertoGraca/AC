@@ -42,13 +42,51 @@ GraphBFSWithQueue* GraphBFSWithQueueExecute(Graph* g,
   // traversal->distance
   // traversal->predecessor
   //
+
+  traversal->marked = (unsigned int*)calloc(numVertices, sizeof(unsigned int));
+  if(traversal->marked == NULL)return NULL;
+
+  traversal->predecessor = (int*)malloc(numVertices*sizeof(int));
+  if(traversal->predecessor == NULL)return NULL;
+
+  for(int i=0;i<numVertices;i++){
+    traversal->predecessor[i] = -1;
+  }
+
+  traversal->distance = (int*)malloc(numVertices*sizeof(int));
+  if(traversal->distance == NULL)return NULL;
+
+  for(int i=0;i<numVertices;i++){
+    traversal->distance[i] = 0;
+  }
+
+  traversal->predecessor[startVertex] = 0;
   
   traversal->graph = g;
   traversal->startVertex = startVertex;
 
   // EFETUAR A TRAVESSIA
 
-  // COMPLETAR !!
+  Queue* queue = QueueCreate(numVertices);
+  
+  QueueEnqueue(queue,startVertex);
+
+  traversal->marked[startVertex] = 1;
+
+  while(!QueueIsEmpty(queue)){
+    startVertex = QueueDequeue(queue);
+    int* adj = GraphGetAdjacentsTo(g,startVertex);
+    for(int i=1;i<adj[0];i++){
+      int adjVertex = adj[i];
+      if(!traversal->marked[adjVertex]){
+        traversal->distance[adjVertex] = traversal->distance[startVertex]+1;
+        traversal->predecessor[adjVertex] = startVertex;
+        QueueEnqueue(queue,adjVertex);
+        traversal->marked[adjVertex] = 1; 
+      }
+    }
+  }
+  
 
   return traversal;
 }
@@ -109,6 +147,7 @@ void GraphBFSWithQueueShowPath(const GraphBFSWithQueue* p, unsigned int v) {
 }
 
 void GraphBFSWithQueueDisplay(const GraphBFSWithQueue* p) {
-  // COMPLETAR !!
-
+  for(int i=0;i<GraphGetNumVertices(p->graph);i++){
+    GraphBFSWithQueueShowPath(p,i);
+  }
 }

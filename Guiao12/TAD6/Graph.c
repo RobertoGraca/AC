@@ -164,7 +164,7 @@ Graph* GraphCopy(const Graph* g) {
   return gr;
 }
 
-Graph* GraphFromFile(FILE f) {
+Graph* GraphFromFile(FILE* f) {
   int num1,num2;
   float num3;
   int info[4];
@@ -172,18 +172,20 @@ Graph* GraphFromFile(FILE f) {
   Graph* g;
 
   
-  while(cont<4 && fscanf(&f,"%d",&num1)==1){
+  while(cont<4 && fscanf(f,"%d",&num1)==1){
     info[cont] = num1;
     cont++;
   }
-  if(info[3]!=NULL)g = GraphCreate(info[2],info[0],info[1]);
+  if(info[3]!=NULL){
+    g = GraphCreate(info[2],info[0],info[1]);
 
-  for(int i=0;i<info[3];i++){
-    if(fscanf(&f,"%d %d %f",&num1,&num2,&num3)==1){
-      if(info[1]==1){
-        GraphAddWeightedEdge(g,num1,num2,(int)(num3*100));
-      }else{
-        GraphAddEdge(g,num1,num2);
+    for(int i=0;i<info[3];i++){
+      if(fscanf(&f,"%d %d %f",&num1,&num2,&num3)==1){
+        if(info[1]==1){
+          GraphAddWeightedEdge(g,num1,num2,(int)(num3*100));
+        }else{
+          GraphAddEdge(g,num1,num2);
+        }
       }
     }
   }
