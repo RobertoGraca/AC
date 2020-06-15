@@ -47,33 +47,31 @@ GraphBellmanFord* GraphBellmanFordExecute(Graph* g, unsigned int startVertex) {
     bellmanFord->predecessor[i] = -1;
   }
 
-  bellmanFord->predecessor[startVertex] = 0;
-
   bellmanFord->distance = (int*)malloc(numVertices*sizeof(int));
   if(bellmanFord->distance == NULL)return NULL;
 
   for(int i=0;i<numVertices;i++){
-    bellmanFord->distance[i] = INT_MAX;
+    bellmanFord->distance[i] = INT_MAX/2;
   }
+
+  bellmanFord->distance[startVertex] = 0;
 
   bellmanFord->graph = g;
   bellmanFord->startVertex = startVertex;
 
   // EXECUTAR O ALGORITMO
-
-  for(int i=1;i<numVertices-1;i++){
-    int* adj = GraphGetAdjacentsTo(g,i);
-    int* wheight = GraphGetDistancesToAdjacents(g,i);
-    for(int j=1;j<adj[0]+1;j++){
-      if(bellmanFord->distance[i] + wheight[j] < bellmanFord->distance[j]){
-        bellmanFord->distance[j] = bellmanFord->distance[i] + wheight[j];
-        bellmanFord->predecessor[j] = i;
+  for(int k=0;k<numVertices;k++){
+    for(int i=0;i<numVertices;i++){
+      int* adj = GraphGetAdjacentsTo(g,i);
+      int* wheight = GraphGetDistancesToAdjacents(g,i);
+      for(int j=1;j<adj[0]+1;j++){
+        int index = adj[j];
+        if(bellmanFord->distance[i] + wheight[j] < bellmanFord->distance[index]){
+          bellmanFord->distance[index] = bellmanFord->distance[i] + wheight[j];
+          bellmanFord->predecessor[index] = i;
+        }
       }
     }
-  }
-
-  for(int i=0;i<numVertices;i++){
-    printf("%d\n",bellmanFord->predecessor[i]);
   }
 
   return bellmanFord;
@@ -118,6 +116,7 @@ Stack* GraphBellmanFordPathTo(const GraphBellmanFord* p, unsigned int v) {
   // Store the path
   for (unsigned int current = v; current != p->startVertex;
        current = p->predecessor[current]) {
+        
     StackPush(s, current);
   }
 

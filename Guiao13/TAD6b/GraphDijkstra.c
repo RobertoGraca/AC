@@ -69,15 +69,15 @@ GraphDijkstra* GraphDijkstraExecute(Graph* g, unsigned int startVertex) {
     result->predecessor[i] = -1;
   }
 
-  result->predecessor[startVertex] = 0;
-
   result->distance = (int*)malloc(numVertices*sizeof(int));
   if(result->distance == NULL)return NULL;
 
 
   for(int i=0;i<numVertices;i++){
-    result->distance[i] = 0;
+    result->distance[i] = INT_MAX;
   }
+
+  result->distance[startVertex] = 0;
 
   result->graph = g;
   result->startVertex = startVertex;
@@ -91,7 +91,7 @@ GraphDijkstra* GraphDijkstraExecute(Graph* g, unsigned int startVertex) {
     cand[i].pri = result->distance[i];
     PriorityQueueInsert(pq,&cand[i]);
   }
-
+  
   while(!PriorityQueueIsEmpty(pq)){
     ITEM item = *(ITEM*)PriorityQueueGetMin(pq);
     startVertex = item.id;
@@ -99,8 +99,8 @@ GraphDijkstra* GraphDijkstraExecute(Graph* g, unsigned int startVertex) {
     int* wheight = GraphGetDistancesToAdjacents(result->graph,startVertex);
     for(int i=1;i<adj[0]+1;i++){
       int index = adj[i];
-      if(result->distance[startVertex] + wheight[index] < result->distance[index]){
-        result->distance[index] = result->distance[startVertex] + wheight[index];
+      if(result->distance[startVertex] + wheight[i] < result->distance[index]){
+        result->distance[index] = result->distance[startVertex] + wheight[i];
         result->predecessor[index] = startVertex;
         cand[index].pri = result->distance[index];
       }
@@ -141,7 +141,7 @@ Stack* GraphDijkstraPathTo(const GraphDijkstra* p, unsigned int v) {
   assert(0 <= v && v < GraphGetNumVertices(p->graph));
 
   Stack* s = StackCreate(GraphGetNumVertices(p->graph));
-
+  
   if (p->distance[v] == INT_MAX) {
     return s;
   }
@@ -149,6 +149,7 @@ Stack* GraphDijkstraPathTo(const GraphDijkstra* p, unsigned int v) {
   // Store the path
   for (unsigned int current = v; current != p->startVertex;
        current = p->predecessor[current]) {
+
     StackPush(s, current);
   }
 

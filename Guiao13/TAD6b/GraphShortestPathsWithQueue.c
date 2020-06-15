@@ -43,25 +43,20 @@ GraphShortestPathsWithQueue* GraphShortestPathsWithQueueExecute(
   // ShortestPathsWithQueue->predecessor
   //
   int marked[numVertices];
-    for(int i=0;i<numVertices;i++){
-      marked[i] = 0;
-    }
 
   ShortestPathsWithQueue->distance = (int*)malloc(numVertices*sizeof(int));
   if(ShortestPathsWithQueue->distance == NULL)return NULL;
-
-  for(int i=0;i<numVertices;i++){
-    ShortestPathsWithQueue->distance[i] = 0;
-  }
 
   ShortestPathsWithQueue->predecessor = (int*)malloc(numVertices*sizeof(int));
   if(ShortestPathsWithQueue->predecessor == NULL)return NULL;
 
   for(int i=0;i<numVertices;i++){
+    marked[i] = 0;
     ShortestPathsWithQueue->predecessor[i] = -1;
+    ShortestPathsWithQueue->distance[i] = INT_MAX;
   }
 
-  ShortestPathsWithQueue->predecessor[startVertex] = 0;
+  ShortestPathsWithQueue->distance[startVertex] = 0;
 
   ShortestPathsWithQueue->graph = g;
   ShortestPathsWithQueue->startVertex = startVertex;
@@ -72,18 +67,19 @@ GraphShortestPathsWithQueue* GraphShortestPathsWithQueueExecute(
   
   QueueEnqueue(queue,startVertex);
 
-  marked[startVertex] = 1;
-
   while(!QueueIsEmpty(queue)){
     startVertex = QueueDequeue(queue);
     int* adj = GraphGetAdjacentsTo(g,startVertex);
-    for(int i=1;i<adj[0];i++){
+    int* wheight = GraphGetDistancesToAdjacents(g,startVertex);
+    for(int i=1;i<adj[0]+1;i++){
       int adjVertex = adj[i];
-      if(!marked[adjVertex]){
-        ShortestPathsWithQueue->distance[adjVertex] = ShortestPathsWithQueue->distance[startVertex]+1;
+      if(ShortestPathsWithQueue->distance[startVertex] + wheight[i] < ShortestPathsWithQueue->distance[adjVertex]){
+        ShortestPathsWithQueue->distance[adjVertex] = ShortestPathsWithQueue->distance[startVertex] + wheight[i];
         ShortestPathsWithQueue->predecessor[adjVertex] = startVertex;
-        QueueEnqueue(queue,adjVertex);
-        marked[adjVertex] = 1; 
+        if(!marked[adjVertex]){
+          marked[adjVertex] = 1; 
+          QueueEnqueue(queue,adjVertex);
+        }
       }
     }
   }
