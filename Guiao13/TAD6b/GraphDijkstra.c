@@ -62,12 +62,51 @@ GraphDijkstra* GraphDijkstraExecute(Graph* g, unsigned int startVertex) {
   // result->predecessor
   //
 
+  result->predecessor = (int*)malloc(numVertices*sizeof(int));
+  if(result->predecessor == NULL)return NULL;
+
+  for(int i=0;i<numVertices;i++){
+    result->predecessor[i] = -1;
+  }
+
+  result->predecessor[startVertex] = 0;
+
+  result->distance = (int*)malloc(numVertices*sizeof(int));
+  if(result->distance == NULL)return NULL;
+
+
+  for(int i=0;i<numVertices;i++){
+    result->distance[i] = 0;
+  }
+
   result->graph = g;
   result->startVertex = startVertex;
 
   // EXECUTAR O ALGORITMO
 
-  // COMPLETAR !!
+  PriorityQueue* pq = PriorityQueueCreate(numVertices,comparator, printer);
+  ITEM cand[numVertices];
+  for(int i=0;i<numVertices;i++){
+    cand[i].id = i;
+    cand[i].pri = result->distance[i];
+    PriorityQueueInsert(pq,&cand[i]);
+  }
+
+  while(!PriorityQueueIsEmpty(pq)){
+    ITEM item = *(ITEM*)PriorityQueueGetMin(pq);
+    startVertex = item.id;
+    int* adj = GraphGetAdjacentsTo(result->graph,startVertex);
+    int* wheight = GraphGetDistancesToAdjacents(result->graph,startVertex);
+    for(int i=1;i<adj[0]+1;i++){
+      int index = adj[i];
+      if(result->distance[startVertex] + wheight[index] < result->distance[index]){
+        result->distance[index] = result->distance[startVertex] + wheight[index];
+        result->predecessor[index] = startVertex;
+        cand[index].pri = result->distance[index];
+      }
+    }
+    PriorityQueueRemoveMin(pq);
+  }
 
   return result;
 }
@@ -135,5 +174,7 @@ void GraphDijkstraShowPath(const GraphDijkstra* p, unsigned int v) {
 }
 
 void GraphDijkstraDisplay(const GraphDijkstra* p) {
-  // COMPLETAR !!
+  for(int i=0;i<GraphGetNumVertices(p->graph);i++){
+    GraphDijkstraShowPath(p,i);
+  }
 }

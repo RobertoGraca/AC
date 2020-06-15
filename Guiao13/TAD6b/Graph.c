@@ -154,15 +154,43 @@ void GraphDestroy(Graph** p) {
 }
 
 Graph* GraphCopy(const Graph* g) {
-  // COMPLETAR !!
-
-  return 0;
+  Graph* gr;
+  if(g->isComplete){
+    gr = GraphCreateComplete(g->numVertices,g->isDigraph);
+  }
+  else{
+    gr = GraphCreate(g->numVertices,g->isDigraph,g->isWeighted);
+  }
+  return gr;
 }
 
-Graph* GraphFromFile(FILE f) {
-  // COMPLETAR !!
+Graph* GraphFromFile(FILE* f) {
+  int num1,num2;
+  float num3;
+  int info[4];
+  int cont=0;
+  Graph* g;
 
-  return 0;
+  
+  while(cont<4 && fscanf(f,"%d",&num1)==1){
+    info[cont] = num1;
+    cont++;
+  }
+  if(info[3]!=NULL){
+    g = GraphCreate(info[2],info[0],info[1]);
+
+    for(int i=0;i<info[3];i++){
+      if(fscanf(f,"%d %d %f",&num1,&num2,&num3)==1){
+        if(info[1]==1){
+          GraphAddWeightedEdge(g,num1,num2,(int)(num3*100));
+        }else{
+          GraphAddEdge(g,num1,num2);
+        }
+      }
+    }
+  }
+
+  return g;
 }
 
 // Graph
@@ -380,8 +408,18 @@ unsigned short GraphAddWeightedEdge(Graph* g, unsigned int v, unsigned int w,
 // CHECKING
 
 unsigned short GraphCheckInvariants(const Graph* g) {
-  // COMPLETAR !!
-
+  int vertices_size = ListGetSize(g->verticesList);
+  int num_edges = 0;
+  int num_edges_vertice;
+  ListMoveToHead(g->verticesList);
+  while(ListGetCurrentPos(g->verticesList) < vertices_size-1){
+    num_edges_vertice = ListGetSize(ListGetCurrentItem(g->verticesList));
+    assert(num_edges_vertice < vertices_size);
+    num_edges = num_edges + num_edges_vertice;
+    ListMoveToNext(g->verticesList);
+  }
+  assert(num_edges <= vertices_size*(vertices_size-1)/2);
+  
   return 0;
 }
 

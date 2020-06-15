@@ -26,7 +26,7 @@ int main(void) {
 
   int vertex = 5;
   GraphBellmanFord* shortestPathsBF = GraphBellmanFordExecute(g01, vertex);
-
+  
   for (int i = 0; i < GraphGetNumVertices(g01); i++) {
     printf("Path from %d to %d: ", vertex, i);
     GraphBellmanFordShowPath(shortestPathsBF, i);

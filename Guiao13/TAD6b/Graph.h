@@ -22,7 +22,7 @@ void GraphDestroy(Graph** p);
 
 Graph* GraphCopy(const Graph* g);
 
-Graph* GraphFromFile(FILE f);
+Graph* GraphFromFile(FILE* f);
 
 // Graph
 

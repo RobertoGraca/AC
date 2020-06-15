@@ -42,13 +42,51 @@ GraphShortestPathsWithQueue* GraphShortestPathsWithQueueExecute(
   // ShortestPathsWithQueue->distance
   // ShortestPathsWithQueue->predecessor
   //
+  int marked[numVertices];
+    for(int i=0;i<numVertices;i++){
+      marked[i] = 0;
+    }
+
+  ShortestPathsWithQueue->distance = (int*)malloc(numVertices*sizeof(int));
+  if(ShortestPathsWithQueue->distance == NULL)return NULL;
+
+  for(int i=0;i<numVertices;i++){
+    ShortestPathsWithQueue->distance[i] = 0;
+  }
+
+  ShortestPathsWithQueue->predecessor = (int*)malloc(numVertices*sizeof(int));
+  if(ShortestPathsWithQueue->predecessor == NULL)return NULL;
+
+  for(int i=0;i<numVertices;i++){
+    ShortestPathsWithQueue->predecessor[i] = -1;
+  }
+
+  ShortestPathsWithQueue->predecessor[startVertex] = 0;
 
   ShortestPathsWithQueue->graph = g;
   ShortestPathsWithQueue->startVertex = startVertex;
 
   // EXECUTAR O ALGORITMO
 
-  // COMPLETAR !!
+  Queue* queue = QueueCreate(numVertices);
+  
+  QueueEnqueue(queue,startVertex);
+
+  marked[startVertex] = 1;
+
+  while(!QueueIsEmpty(queue)){
+    startVertex = QueueDequeue(queue);
+    int* adj = GraphGetAdjacentsTo(g,startVertex);
+    for(int i=1;i<adj[0];i++){
+      int adjVertex = adj[i];
+      if(!marked[adjVertex]){
+        ShortestPathsWithQueue->distance[adjVertex] = ShortestPathsWithQueue->distance[startVertex]+1;
+        ShortestPathsWithQueue->predecessor[adjVertex] = startVertex;
+        QueueEnqueue(queue,adjVertex);
+        marked[adjVertex] = 1; 
+      }
+    }
+  }
 
   return ShortestPathsWithQueue;
 }

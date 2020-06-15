@@ -11,7 +11,7 @@ CFLAGS += -x c
 CFLAGS += -g -Wall
 CPPFLAGS = $(CFLAGS)
 
-TARGETS = PriorityQueueTest example1 example2 example3
+TARGETS = example3
 
 all: $(TARGETS)
 
