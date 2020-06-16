@@ -154,5 +154,7 @@ void GraphShortestPathsWithQueueShowPath(const GraphShortestPathsWithQueue* p,
 }
 
 void GraphShortestPathsWithQueueDisplay(const GraphShortestPathsWithQueue* p) {
-  // COMPLETAR !!
+  for(int i=0;i<GraphGetNumVertices(p->graph);i++){
+    GraphShortestPathsWithQueueShowPath(p,i);
+  }
 }
