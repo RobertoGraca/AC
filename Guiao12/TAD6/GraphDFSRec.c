@@ -122,6 +122,8 @@ void GraphDFSRecShowPath(const GraphDFSRec* p, unsigned int v) {
 }
 
 void GraphDFSRecDisplay(const GraphDFSRec* p) {
-  // COMPLETAR !!
+  for(int i=0;i<GraphGetNumVertices(p->graph);i++){
+    GraphDFSRecShowPath(p,i);
+  }
   
 }
